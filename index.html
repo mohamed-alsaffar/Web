@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Form Selector</title>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    .form-area { margin-top: 20px; }
+    select { font-size: 16px; }
+  </style>
+</head>
+<body>
+  <h2>Select a Form</h2>
+  <label for="formSelect">Choose form:</label>
+  <select id="formSelect">
+    <option value="">--Select--</option>
+    <option value="A">Form A</option>
+    <option value="B">Form B</option>
+    <option value="C">Form C</option>
+    <option value="D">Form D</option>
+  </select>
+
+  <div class="form-area" id="formArea"></div>
+
+  <script>
+    const formArea = document.getElementById('formArea');
+    const formSelect = document.getElementById('formSelect');
+
+    const forms = {
+      A: `<form><label>Name A:</label><input type="text"><br><button>Submit A</button></form>`,
+      B: `<form><label>Email B:</label><input type="email"><br><button>Submit B</button></form>`,
+      C: `<form><label>Message C:</label><textarea></textarea><br><button>Submit C</button></form>`,
+      D: `<form><label>Option D:</label><select><option>1</option><option>2</option></select><br><button>Submit D</button></form>`
+    };
+
+    formSelect.addEventListener('change', () => {
+      const selected = formSelect.value;
+      formArea.innerHTML = forms[selected] || '';
+    });
+  </script>
+</body>
+</html>
