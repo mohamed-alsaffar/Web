@@ -232,15 +232,23 @@
       document.getElementById('popupOverlay').style.display = 'none';
     }
 
+ 
     function handleAction(select, id) {
       const value = select.value;
       const msgDiv = document.getElementById('result-' + id);
+      const row = select.closest('tr');
+      const statusCell = row.cells[2]; 
+
       if (value === 'approve') {
         msgDiv.textContent = '✅ Approved';
         msgDiv.style.color = '#28a745';
+        statusCell.textContent = 'Approved';
+        select.disabled = true;
       } else if (value === 'reject') {
         msgDiv.textContent = '❌ Rejected';
         msgDiv.style.color = '#dc3545';
+        statusCell.textContent = 'Rejected';
+        select.disabled = true;
       } else {
         msgDiv.textContent = '';
       }
