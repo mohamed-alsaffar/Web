@@ -110,18 +110,16 @@
       options: { responsive: true, plugins: { title: { display: true, text: 'Requests Over Time' } } }
     });
 
-    microsoftTeams.initialize();
+microsoftTeams.initialize();
 
-    microsoftTeams.getContext(function(context) {
-      // Save user info in JS variables
-      const userDisplayName = context.userDisplayName || "";
-      const userEmail = context.userEmail || "";
-      const userCompany = context.teamSiteDomain || "";
+microsoftTeams.getContext(function(context) {
+  const userDisplayName = context.userDisplayName || context.userName || context.upn || "Unknown User";
+  const userEmail = context.userEmail || context.upn || "Unknown Email";
+  const userCompany = context.teamSiteDomain || context.tid || "Unknown Company";
 
-      // Show user info at the top
-      document.getElementById('userInfo').innerHTML =
-        `<strong>${userDisplayName}</strong> &nbsp;|&nbsp; ${userEmail} &nbsp;|&nbsp; ${userCompany}`;
-    });
+  document.getElementById('userInfo').innerHTML =
+    `<strong>${userDisplayName}</strong> &nbsp;|&nbsp; ${userEmail} &nbsp;|&nbsp; ${userCompany}`;
+});
   </script>
 </body>
 </html>
