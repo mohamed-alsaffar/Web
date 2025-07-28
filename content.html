@@ -100,6 +100,55 @@
 .home-icon {
   position: static; /* Remove absolute for flex alignment */
 }
+/* ...existing code... */
+.form-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  padding: 24px 32px;
+  margin-bottom: 24px;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+.approval-card {
+  background: #f6f8fa;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 18px;
+}
+.section-title {
+  font-weight: bold;
+  margin-bottom: 12px;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.submit-btn {
+  background: #0078d4;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 12px 28px;
+  font-size: 17px;
+  cursor: pointer;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.2s;
+}
+.submit-btn:hover {
+  background: #005fa3;
+}
+/* ...existing code... */
   </style>
 </head>
 <body>
@@ -248,7 +297,11 @@
     const formArea = document.getElementById('formArea');
     const formSelect = document.getElementById('formSelect');
 
-    const formA = `<div><div class='section-title'>New Supplier Request</div>
+// ...existing code...
+const formA = `
+  <div class="form-card">
+    <div class="section-title"><i class="fa-solid fa-industry"></i> New Supplier Request</div>
+    <div class="form-grid">
       <input placeholder='Address'>
       <input placeholder='Supplier Code'>
       <input placeholder='Operating Unit'>
@@ -269,13 +322,21 @@
       <input placeholder='Bank Account Name'>
       <input placeholder='Bank Address'>
       <input placeholder='SWIFT Code'>
-      <div class='approval'>
-        <input placeholder='Purchase Manager/Supervisor'>
-        <input placeholder='Finance Manager'>
-        <input placeholder='Created By'>
-      </div></div>`;
+    </div>
+    <div class="approval-card">
+      <div class="section-title"><i class="fa-solid fa-user-check"></i> Approvals</div>
+      <input placeholder='Purchase Manager/Supervisor'>
+      <input placeholder='Finance Manager'>
+      <input placeholder='Created By'>
+    </div>
+    <button class="submit-btn"><i class="fa-solid fa-paper-plane"></i> Submit Request</button>
+  </div>
+`;
 
-    const formB = `<div><div class='section-title'>Customer Account (Site Creation)</div>
+const formB = `
+  <div class="form-card">
+    <div class="section-title"><i class="fa-solid fa-user-tie"></i> Customer Account (Site Creation)</div>
+    <div class="form-grid">
       <input placeholder='Customer Name'>
       <input placeholder='Account Number'>
       <input placeholder='Operating Unit'>
@@ -311,14 +372,25 @@
       <input placeholder='Customer Sub Sector'>
       <input placeholder='Pick Rule'>
       <input placeholder='Customer Group'>
-      <div class='approval'>
-        <input placeholder='Manager/Supervisor'>
-        <input placeholder='Finance Manager'>
-        <input placeholder='Created By'>
-      </div></div>`;
+    </div>
+    <div class="approval-card">
+      <div class="section-title"><i class="fa-solid fa-user-check"></i> Approvals</div>
+      <input placeholder='Manager/Supervisor'>
+      <input placeholder='Finance Manager'>
+      <input placeholder='Created By'>
+    </div>
+    <button class="submit-btn"><i class="fa-solid fa-paper-plane"></i> Submit Request</button>
+  </div>
+`;
 
-    const formC = `<div><p>No custom fields for this form.</p></div>`;
-
+const formC = `
+  <div class="form-card">
+    <div class="section-title"><i class="fa-solid fa-file"></i> Other Request</div>
+    <p>No custom fields for this form.</p>
+    <button class="submit-btn"><i class="fa-solid fa-paper-plane"></i> Submit Request</button>
+  </div>
+`;
+// ...existing code...
     formSelect.addEventListener('change', () => {
       const selected = formSelect.value;
       if (selected === 'A') formArea.innerHTML = formA;
