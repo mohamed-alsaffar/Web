@@ -5,50 +5,49 @@
   <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    body { font-family: 'Segoe UI', sans-serif; padding: 20px; background: #eef2f7; }
-    .form-area {
-      margin-top: 20px;
+    body { font-family: Arial; padding: 20px; background: #f8f8f8; }
+    .form-area { margin-top: 20px; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    select, input, textarea, button { font-size: 16px; margin: 5px 0; padding: 8px; width: 100%; border-radius: 4px; border: 1px solid #ccc; }
+    h2 { margin-bottom: 10px; }
+    .section-title { font-weight: bold; margin-top: 20px; border-bottom: 1px solid #ccc; padding-bottom: 5px; color: #444; }
+    .approval { display: flex; gap: 10px; margin-top: 10px; }
+    table.dataTable thead th { background-color: #eee; }
+    .popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
       background: #fff;
       padding: 20px;
       border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      border-left: 5px solid #0078d7;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      z-index: 1000;
+      width: 400px;
     }
-    select, input, textarea, button {
-      font-size: 15px;
-      margin: 6px 0;
-      padding: 10px;
+    .popup h3 { margin-top: 0; }
+    .popup .close-btn {
+      float: right;
+      cursor: pointer;
+      color: #aaa;
+    }
+    .popup .close-btn:hover {
+      color: red;
+    }
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
       width: 100%;
-      border-radius: 6px;
-      border: 1px solid #ccc;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      z-index: 999;
     }
-    h2 { color: #0078d7; margin-bottom: 10px; }
-    .section-title {
-      font-weight: bold;
-      margin-top: 25px;
-      border-bottom: 2px solid #ccc;
-      padding-bottom: 8px;
-      color: #333;
-      font-size: 18px;
-    }
-    .approval {
-      display: flex;
-      gap: 10px;
-      margin-top: 15px;
-    }
-    table.dataTable thead th { background-color: #d9e7f3; }
-    label[for=formSelect]::before {
-      content: "\f074 ";
-      font-family: "Font Awesome 6 Free";
-      font-weight: 900;
-      margin-right: 8px;
-      color: #0078d7;
-    }
-    #formSelect { max-width: 400px; }
   </style>
 </head>
 <body>
-  <h2><i class="fas fa-file-signature"></i> Select a Form</h2>
+  <h2><i class="fa-solid fa-clipboard-list"></i> Select a Form</h2>
   <label for="formSelect">Choose form:</label>
   <select id="formSelect">
     <option value="">--Select--</option>
@@ -59,7 +58,7 @@
 
   <div class="form-area" id="formArea"></div>
 
-  <h2><i class="fas fa-history"></i> Previous Requests</h2>
+  <h2><i class="fa-solid fa-clock-rotate-left"></i> Previous Requests</h2>
   <table id="requestsTable" class="display" style="width:100%">
     <thead>
       <tr>
@@ -72,105 +71,46 @@
       </tr>
     </thead>
     <tbody>
-      <tr><td>REQ001</td><td>New Supplier</td><td><span style="color:green;"><i class="fas fa-check-circle"></i> Approved</span></td><td>Mohamed</td><td>Ali</td><td>2024-06-01</td></tr>
-      <tr><td>REQ002</td><td>Customer Account</td><td><span style="color:red;"><i class="fas fa-times-circle"></i> Rejected</span></td><td>Mohamed</td><td>Ali</td><td>2024-06-15</td></tr>
-      <tr><td>REQ003</td><td>Other</td><td><span style="color:orange;"><i class="fas fa-clock"></i> Pending</span></td><td>Mohamed</td><td>Hassan</td><td>2024-07-01</td></tr>
-      <tr><td>REQ004</td><td>New Supplier</td><td><span style="color:gray;"><i class="fas fa-ban"></i> Not Approved</span></td><td>Mohamed</td><td>Hassan</td><td>2024-07-20</td></tr>
+      <tr data-details='{"id":"REQ001","type":"New Supplier","status":"Approved","requester":"Mohamed","manager":"Ali","date":"2024-06-01"}'><td class="clickable">REQ001</td><td>New Supplier</td><td>Approved</td><td>Mohamed</td><td>Ali</td><td>2024-06-01</td></tr>
+      <tr data-details='{"id":"REQ002","type":"Customer Account","status":"Rejected","requester":"Mohamed","manager":"Ali","date":"2024-06-15"}'><td class="clickable">REQ002</td><td>Customer Account</td><td>Rejected</td><td>Mohamed</td><td>Ali</td><td>2024-06-15</td></tr>
+      <tr data-details='{"id":"REQ003","type":"Other","status":"Pending","requester":"Mohamed","manager":"Hassan","date":"2024-07-01"}'><td class="clickable">REQ003</td><td>Other</td><td>Pending</td><td>Mohamed</td><td>Hassan</td><td>2024-07-01</td></tr>
+      <tr data-details='{"id":"REQ004","type":"New Supplier","status":"Not Approved","requester":"Mohamed","manager":"Omar","date":"2024-07-20"}'><td class="clickable">REQ004</td><td>New Supplier</td><td>Not Approved</td><td>Mohamed</td><td>Omar</td><td>2024-07-20</td></tr>
     </tbody>
   </table>
+
+  <div class="overlay" id="overlay"></div>
+  <div class="popup" id="popup">
+    <span class="close-btn" id="closePopup">&times;</span>
+    <h3>Request Details</h3>
+    <div id="popupContent"></div>
+  </div>
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
   <script>
     $(document).ready(function() {
       $('#requestsTable').DataTable();
-    });
 
-    const formArea = document.getElementById('formArea');
-    const formSelect = document.getElementById('formSelect');
+      $('.clickable').on('click', function() {
+        const row = $(this).closest('tr');
+        const details = row.data('details');
+        let html = `
+          <p><strong>ID:</strong> ${details.id}</p>
+          <p><strong>Type:</strong> ${details.type}</p>
+          <p><strong>Status:</strong> ${details.status}</p>
+          <p><strong>Requester:</strong> ${details.requester}</p>
+          <p><strong>Manager:</strong> ${details.manager}</p>
+          <p><strong>Date:</strong> ${details.date}</p>
+        `;
+        $('#popupContent').html(html);
+        $('#overlay').fadeIn();
+        $('#popup').fadeIn();
+      });
 
-    const formA = `
-      <div>
-        <div class='section-title'><i class="fas fa-building"></i> New Supplier Request</div>
-        <input placeholder='Address'>
-        <input placeholder='Supplier Code'>
-        <input placeholder='Operating Unit'>
-        <input placeholder='Supplier Site Name'>
-        <input placeholder='Purchasing Pay'>
-        <input placeholder='Ship To Location'>
-        <input placeholder='Bill To Location'>
-        <input placeholder='Pay Group'>
-        <input placeholder='Liability'>
-        <input placeholder='Prepayment'>
-        <input placeholder='Bills Payable'>
-        <input placeholder='Payment Terms'>
-        <input placeholder='Currency'>
-        <input placeholder='Payment Method'>
-        <input placeholder='Account No.'>
-        <input placeholder='IBAN Number'>
-        <input placeholder='Bank Name'>
-        <input placeholder='Bank Account Name'>
-        <input placeholder='Bank Address'>
-        <input placeholder='SWIFT Code'>
-        <div class='approval'>
-          <input placeholder='Purchase Manager/Supervisor'>
-          <input placeholder='Finance Manager'>
-          <input placeholder='Created By'>
-        </div>
-      </div>`;
-
-    const formB = `
-      <div>
-        <div class='section-title'><i class="fas fa-user-plus"></i> Customer Account (Site Creation)</div>
-        <input placeholder='Customer Name'>
-        <input placeholder='Account Number'>
-        <input placeholder='Operating Unit'>
-        <input placeholder='Profile Collector'>
-        <input placeholder='Bill-To Site Location'>
-        <input placeholder='Country'>
-        <input placeholder='Address Line 1'>
-        <input placeholder='Address Line 2'>
-        <input placeholder='Address Line 3'>
-        <input placeholder='Address Line 4'>
-        <input placeholder='Sales Territory'>
-        <input placeholder='EDI Location'>
-        <input placeholder='Customer Sector'>
-        <input placeholder='Customer Sub Sector'>
-        <input placeholder='Pick Rule'>
-        <input placeholder='Customer Group'>
-        <input placeholder='Sales Rep Name'>
-        <input placeholder='Collector'>
-        <input placeholder='Payment Terms'>
-        <input placeholder='Currency'>
-        <input placeholder='Order Credit Limit'>
-        <input placeholder='Credit Limit'>
-        <input placeholder='Ship-To Site Location'>
-        <input placeholder='Bill-To Site Location'>
-        <input placeholder='Country'>
-        <input placeholder='Address Line 1'>
-        <input placeholder='Address Line 2'>
-        <input placeholder='Address Line 3'>
-        <input placeholder='Address Line 4'>
-        <input placeholder='Sales Territory'>
-        <input placeholder='EDI Location'>
-        <input placeholder='Customer Sector'>
-        <input placeholder='Customer Sub Sector'>
-        <input placeholder='Pick Rule'>
-        <input placeholder='Customer Group'>
-        <div class='approval'>
-          <input placeholder='Manager/Supervisor'>
-          <input placeholder='Finance Manager'>
-          <input placeholder='Created By'>
-        </div>
-      </div>`;
-
-    const formC = `<div><p>No custom fields for this form.</p></div>`;
-
-    formSelect.addEventListener('change', () => {
-      const selected = formSelect.value;
-      if (selected === 'A') formArea.innerHTML = formA;
-      else if (selected === 'B') formArea.innerHTML = formB;
-      else formArea.innerHTML = formC;
+      $('#closePopup, #overlay').on('click', function() {
+        $('#overlay').fadeOut();
+        $('#popup').fadeOut();
+      });
     });
   </script>
 </body>
