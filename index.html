@@ -155,6 +155,23 @@
       }
     }
   </script>
+   <script>
+    async function updateTime() {
+      try {
+        const res = await fetch('https://timeapi.io/api/Time/current/zone?timeZone=UTC');
+        const data = await res.json();
+        const time = new Date(data.dateTime).toLocaleTimeString('en-GB', { hour12: false });
+        document.getElementById('timeDisplay').textContent = time;
+      } catch (err) {
+        document.getElementById('timeDisplay').textContent = "Failed to load time";
+      }
+    }
+
+    window.onload = function () {
+      updateTime();
+      setInterval(updateTime, 500);
+    }
+  </script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
   <script>
