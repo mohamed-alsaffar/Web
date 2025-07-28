@@ -68,9 +68,33 @@
       font-weight: bold;
       color: #0078d4;
     }
+        .home-icon {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      color: #333;
+      font-family: Arial, sans-serif;
+    }
+
+    .home-icon img {
+      width: 24px;
+      height: 24px;
+      margin-right: 5px;
+    }
+
+    .home-icon:hover {
+      color: #0078D4;
+    }
   </style>
 </head>
 <body>
+    <a href="index.html" class="home-icon">
+    <img src="https://cdn-icons-png.flaticon.com/512/25/25694.png" alt="Home">
+    Home
+  </a>
   <h2>Select a Form</h2>
   <label for="formSelect">Choose form:</label>
   <select id="formSelect">
