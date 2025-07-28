@@ -1,40 +1,181 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Form Selector</title>
+  <title>Form Selector Dashboard</title>
   <style>
-    body { font-family: Arial; padding: 20px; }
-    .form-area { margin-top: 20px; }
-    select { font-size: 16px; }
+    body {
+      font-family: Arial, sans-serif;
+      padding: 30px;
+      background: #f9f9f9;
+    }
+    h2 {
+      color: #333;
+    }
+    .form-wrapper {
+      margin-top: 30px;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    label {
+      display: block;
+      margin: 10px 0 5px;
+      font-weight: bold;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .status {
+      margin-top: 20px;
+      padding: 15px;
+      background: #eef;
+      border: 1px solid #ccf;
+      border-radius: 5px;
+    }
+    .hidden {
+      display: none;
+    }
   </style>
 </head>
 <body>
-  <h2>Select a Form</h2>
-  <label for="formSelect">Choose form:</label>
+  <h2>Welcome, Mohamed</h2>
+  <label for="formSelect">Select Form Type:</label>
   <select id="formSelect">
-    <option value="">--Select--</option>
-    <option value="A">Form A</option>
-    <option value="B">Form B</option>
-    <option value="C">Form C</option>
-    <option value="D">Form D</option>
+    <option value="">-- Select Form --</option>
+    <option value="A">NEW SUPPLIER REQUEST</option>
+    <option value="B">CUSTOMER ACCOUNT (SITE CREATION)</option>
+    <option value="C">Draft</option>
   </select>
 
-  <div class="form-area" id="formArea"></div>
+  <div class="form-wrapper hidden" id="formContainer">
+    <form id="dynamicForm">
+      <div id="commonFields">
+        <label>Requester Name</label>
+        <input type="text" value="Mohamed" readonly>
+
+        <label>Manager Approval</label>
+        <select>
+          <option>Approved</option>
+          <option>Not Approved</option>
+        </select>
+
+        <label>Department Manager Approval</label>
+        <select>
+          <option>Approved</option>
+          <option>Not Approved</option>
+        </select>
+      </div>
+
+      <div id="formA" class="hidden">
+        <h3>NEW SUPPLIER REQUEST</h3>
+        <label>Address</label><input type="text">
+        <label>Supplier Code</label><input type="text">
+        <label>Operating Unit</label><input type="text">
+        <label>Supplier Site Name</label><input type="text">
+        <label>Purchasing</label><input type="text">
+        <label>Ship To Location</label><input type="text">
+        <label>Bill To Location</label><input type="text">
+        <label>Pay Group</label><input type="text">
+
+        <label>Liability</label><input type="text">
+        <label>Prepayment</label><input type="text">
+        <label>Bills Payable</label><input type="text">
+
+        <label>Payment Terms</label><input type="text">
+        <label>Currency</label><input type="text">
+        <label>Payment Method</label><input type="text">
+
+        <label>Bank Account No.</label><input type="text">
+        <label>IBAN Number</label><input type="text">
+        <label>Bank Name</label><input type="text">
+        <label>Bank Account Name</label><input type="text">
+        <label>Bank Address</label><input type="text">
+        <label>Swift Code</label><input type="text">
+
+        <label>Purchase Manager/Supervisor</label><input type="text">
+        <label>Finance Manager</label><input type="text">
+        <label>Created By</label><input type="text">
+        <label>Date</label><input type="date">
+      </div>
+
+      <div id="formB" class="hidden">
+        <h3>CUSTOMER ACCOUNT (SITE CREATION)</h3>
+        <label>Customer Name</label><input type="text">
+        <label>Account Number</label><input type="text">
+        <label>Operating Unit</label><input type="text">
+        <label>Profile Collector</label><input type="text">
+        <label>Bill-To Site Location</label><input type="text">
+        <label>Country</label><input type="text">
+        <label>Address Line 1</label><input type="text">
+        <label>Address Line 2</label><input type="text">
+        <label>Address Line 3</label><input type="text">
+        <label>Address Line 4</label><input type="text">
+
+        <label>Sales Territory</label><input type="text">
+        <label>EDI Location</label><input type="text">
+        <label>Customer Sector</label><input type="text">
+        <label>Customer Sub Sector</label><input type="text">
+        <label>Pick Rule</label><input type="text">
+        <label>Customer Group</label><input type="text">
+        <label>Sales Rep Name</label><input type="text">
+        <label>Collector</label><input type="text">
+        <label>Payment Terms</label><input type="text">
+        <label>Currency</label><input type="text">
+        <label>Order Credit Limit</label><input type="text">
+        <label>Credit Limit</label><input type="text">
+
+        <label>Ship-To Site Location</label><input type="text">
+        <label>Bill-To Site Location</label><input type="text">
+        <label>Country</label><input type="text">
+        <label>Address Line 1</label><input type="text">
+        <label>Address Line 2</label><input type="text">
+        <label>Address Line 3</label><input type="text">
+        <label>Address Line 4</label><input type="text">
+
+        <label>Sales Territory</label><input type="text">
+        <label>EDI Location</label><input type="text">
+        <label>Customer Sector</label><input type="text">
+        <label>Customer Sub Sector</label><input type="text">
+        <label>Pick Rule</label><input type="text">
+        <label>Customer Group</label><input type="text">
+
+        <label>Manager/Supervisor</label><input type="text">
+        <label>Finance Manager</label><input type="text">
+        <label>Created By</label><input type="text">
+        <label>Date</label><input type="date">
+      </div>
+
+      <button type="submit">Submit</button>
+    </form>
+  </div>
 
   <script>
-    const formArea = document.getElementById('formArea');
     const formSelect = document.getElementById('formSelect');
-
-    const forms = {
-      A: `<form><label>Name A:</label><input type="text"><br><button>Submit A</button></form>`,
-      B: `<form><label>Email B:</label><input type="email"><br><button>Submit B</button></form>`,
-      C: `<form><label>Message C:</label><textarea></textarea><br><button>Submit C</button></form>`,
-      D: `<form><label>Option D:</label><select><option>1</option><option>2</option></select><br><button>Submit D</button></form>`
-    };
+    const formContainer = document.getElementById('formContainer');
+    const formA = document.getElementById('formA');
+    const formB = document.getElementById('formB');
 
     formSelect.addEventListener('change', () => {
-      const selected = formSelect.value;
-      formArea.innerHTML = forms[selected] || '';
+      formContainer.classList.remove('hidden');
+      formA.classList.add('hidden');
+      formB.classList.add('hidden');
+
+      switch (formSelect.value) {
+        case 'A':
+          formA.classList.remove('hidden');
+          break;
+        case 'B':
+          formB.classList.remove('hidden');
+          break;
+        case 'C':
+          // Draft — nothing to show
+          break;
+      }
     });
   </script>
 </body>
