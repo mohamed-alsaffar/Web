@@ -1,181 +1,142 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Form Selector Dashboard</title>
+  <title>Form Selector</title>
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 30px;
-      background: #f9f9f9;
-    }
-    h2 {
-      color: #333;
-    }
-    .form-wrapper {
-      margin-top: 30px;
-      background: #fff;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    label {
-      display: block;
-      margin: 10px 0 5px;
-      font-weight: bold;
-    }
-    input, select, textarea {
-      width: 100%;
-      padding: 8px;
-      margin-bottom: 15px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-    .status {
-      margin-top: 20px;
-      padding: 15px;
-      background: #eef;
-      border: 1px solid #ccf;
-      border-radius: 5px;
-    }
-    .hidden {
-      display: none;
-    }
+    body { font-family: Arial; padding: 20px; background: #f8f8f8; }
+    .form-area { margin-top: 20px; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    select, input, textarea, button { font-size: 16px; margin: 5px 0; padding: 8px; width: 100%; }
+    h2 { margin-bottom: 10px; }
+    .section-title { font-weight: bold; margin-top: 20px; border-bottom: 1px solid #ccc; padding-bottom: 5px; }
+    .approval { display: flex; gap: 10px; margin-top: 10px; }
+    table.dataTable thead th { background-color: #eee; }
   </style>
 </head>
 <body>
-  <h2>Welcome, Mohamed</h2>
-  <label for="formSelect">Select Form Type:</label>
+  <h2>Select a Form</h2>
+  <label for="formSelect">Choose form:</label>
   <select id="formSelect">
-    <option value="">-- Select Form --</option>
-    <option value="A">NEW SUPPLIER REQUEST</option>
-    <option value="B">CUSTOMER ACCOUNT (SITE CREATION)</option>
-    <option value="C">Draft</option>
+    <option value="">--Select--</option>
+    <option value="A">New Supplier Request</option>
+    <option value="B">Customer Account (Site Creation)</option>
+    <option value="C">Other</option>
   </select>
 
-  <div class="form-wrapper hidden" id="formContainer">
-    <form id="dynamicForm">
-      <div id="commonFields">
-        <label>Requester Name</label>
-        <input type="text" value="Mohamed" readonly>
+  <div class="form-area" id="formArea"></div>
 
-        <label>Manager Approval</label>
-        <select>
-          <option>Approved</option>
-          <option>Not Approved</option>
-        </select>
+  <h2>Previous Requests</h2>
+  <table id="requestsTable" class="display" style="width:100%">
+    <thead>
+      <tr>
+        <th>Request ID</th>
+        <th>Type</th>
+        <th>Status</th>
+        <th>Requester</th>
+        <th>Manager</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>REQ001</td><td>New Supplier</td><td>Approved</td><td>Mohamed</td><td>Ali</td><td>2024-06-01</td></tr>
+      <tr><td>REQ002</td><td>Customer Account</td><td>Rejected</td><td>Mohamed</td><td>Ali</td><td>2024-06-15</td></tr>
+      <tr><td>REQ003</td><td>Other</td><td>Pending</td><td>Mohamed</td><td>Hassan</td><td>2024-07-01</td></tr>
+      <tr><td>REQ004</td><td>New Supplier</td><td>Not Approved</td><td>Mohamed</td><td>Omar</td><td>2024-07-20</td></tr>
+    </tbody>
+  </table>
 
-        <label>Department Manager Approval</label>
-        <select>
-          <option>Approved</option>
-          <option>Not Approved</option>
-        </select>
-      </div>
-
-      <div id="formA" class="hidden">
-        <h3>NEW SUPPLIER REQUEST</h3>
-        <label>Address</label><input type="text">
-        <label>Supplier Code</label><input type="text">
-        <label>Operating Unit</label><input type="text">
-        <label>Supplier Site Name</label><input type="text">
-        <label>Purchasing</label><input type="text">
-        <label>Ship To Location</label><input type="text">
-        <label>Bill To Location</label><input type="text">
-        <label>Pay Group</label><input type="text">
-
-        <label>Liability</label><input type="text">
-        <label>Prepayment</label><input type="text">
-        <label>Bills Payable</label><input type="text">
-
-        <label>Payment Terms</label><input type="text">
-        <label>Currency</label><input type="text">
-        <label>Payment Method</label><input type="text">
-
-        <label>Bank Account No.</label><input type="text">
-        <label>IBAN Number</label><input type="text">
-        <label>Bank Name</label><input type="text">
-        <label>Bank Account Name</label><input type="text">
-        <label>Bank Address</label><input type="text">
-        <label>Swift Code</label><input type="text">
-
-        <label>Purchase Manager/Supervisor</label><input type="text">
-        <label>Finance Manager</label><input type="text">
-        <label>Created By</label><input type="text">
-        <label>Date</label><input type="date">
-      </div>
-
-      <div id="formB" class="hidden">
-        <h3>CUSTOMER ACCOUNT (SITE CREATION)</h3>
-        <label>Customer Name</label><input type="text">
-        <label>Account Number</label><input type="text">
-        <label>Operating Unit</label><input type="text">
-        <label>Profile Collector</label><input type="text">
-        <label>Bill-To Site Location</label><input type="text">
-        <label>Country</label><input type="text">
-        <label>Address Line 1</label><input type="text">
-        <label>Address Line 2</label><input type="text">
-        <label>Address Line 3</label><input type="text">
-        <label>Address Line 4</label><input type="text">
-
-        <label>Sales Territory</label><input type="text">
-        <label>EDI Location</label><input type="text">
-        <label>Customer Sector</label><input type="text">
-        <label>Customer Sub Sector</label><input type="text">
-        <label>Pick Rule</label><input type="text">
-        <label>Customer Group</label><input type="text">
-        <label>Sales Rep Name</label><input type="text">
-        <label>Collector</label><input type="text">
-        <label>Payment Terms</label><input type="text">
-        <label>Currency</label><input type="text">
-        <label>Order Credit Limit</label><input type="text">
-        <label>Credit Limit</label><input type="text">
-
-        <label>Ship-To Site Location</label><input type="text">
-        <label>Bill-To Site Location</label><input type="text">
-        <label>Country</label><input type="text">
-        <label>Address Line 1</label><input type="text">
-        <label>Address Line 2</label><input type="text">
-        <label>Address Line 3</label><input type="text">
-        <label>Address Line 4</label><input type="text">
-
-        <label>Sales Territory</label><input type="text">
-        <label>EDI Location</label><input type="text">
-        <label>Customer Sector</label><input type="text">
-        <label>Customer Sub Sector</label><input type="text">
-        <label>Pick Rule</label><input type="text">
-        <label>Customer Group</label><input type="text">
-
-        <label>Manager/Supervisor</label><input type="text">
-        <label>Finance Manager</label><input type="text">
-        <label>Created By</label><input type="text">
-        <label>Date</label><input type="date">
-      </div>
-
-      <button type="submit">Submit</button>
-    </form>
-  </div>
-
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
   <script>
+    $(document).ready(function() {
+      $('#requestsTable').DataTable();
+    });
+
+    const formArea = document.getElementById('formArea');
     const formSelect = document.getElementById('formSelect');
-    const formContainer = document.getElementById('formContainer');
-    const formA = document.getElementById('formA');
-    const formB = document.getElementById('formB');
+
+    const formA = `
+      <div>
+        <div class='section-title'>New Supplier Request</div>
+        <input placeholder='Address'>
+        <input placeholder='Supplier Code'>
+        <input placeholder='Operating Unit'>
+        <input placeholder='Supplier Site Name'>
+        <input placeholder='Purchasing Pay'>
+        <input placeholder='Ship To Location'>
+        <input placeholder='Bill To Location'>
+        <input placeholder='Pay Group'>
+        <input placeholder='Liability'>
+        <input placeholder='Prepayment'>
+        <input placeholder='Bills Payable'>
+        <input placeholder='Payment Terms'>
+        <input placeholder='Currency'>
+        <input placeholder='Payment Method'>
+        <input placeholder='Account No.'>
+        <input placeholder='IBAN Number'>
+        <input placeholder='Bank Name'>
+        <input placeholder='Bank Account Name'>
+        <input placeholder='Bank Address'>
+        <input placeholder='SWIFT Code'>
+        <div class='approval'>
+          <input placeholder='Purchase Manager/Supervisor'>
+          <input placeholder='Finance Manager'>
+          <input placeholder='Created By'>
+        </div>
+      </div>`;
+
+    const formB = `
+      <div>
+        <div class='section-title'>Customer Account (Site Creation)</div>
+        <input placeholder='Customer Name'>
+        <input placeholder='Account Number'>
+        <input placeholder='Operating Unit'>
+        <input placeholder='Profile Collector'>
+        <input placeholder='Bill-To Site Location'>
+        <input placeholder='Country'>
+        <input placeholder='Address Line 1'>
+        <input placeholder='Address Line 2'>
+        <input placeholder='Address Line 3'>
+        <input placeholder='Address Line 4'>
+        <input placeholder='Sales Territory'>
+        <input placeholder='EDI Location'>
+        <input placeholder='Customer Sector'>
+        <input placeholder='Customer Sub Sector'>
+        <input placeholder='Pick Rule'>
+        <input placeholder='Customer Group'>
+        <input placeholder='Sales Rep Name'>
+        <input placeholder='Collector'>
+        <input placeholder='Payment Terms'>
+        <input placeholder='Currency'>
+        <input placeholder='Order Credit Limit'>
+        <input placeholder='Credit Limit'>
+        <input placeholder='Ship-To Site Location'>
+        <input placeholder='Bill-To Site Location'>
+        <input placeholder='Country'>
+        <input placeholder='Address Line 1'>
+        <input placeholder='Address Line 2'>
+        <input placeholder='Address Line 3'>
+        <input placeholder='Address Line 4'>
+        <input placeholder='Sales Territory'>
+        <input placeholder='EDI Location'>
+        <input placeholder='Customer Sector'>
+        <input placeholder='Customer Sub Sector'>
+        <input placeholder='Pick Rule'>
+        <input placeholder='Customer Group'>
+        <div class='approval'>
+          <input placeholder='Manager/Supervisor'>
+          <input placeholder='Finance Manager'>
+          <input placeholder='Created By'>
+        </div>
+      </div>`;
+
+    const formC = `<div><p>No custom fields for this form.</p></div>`;
 
     formSelect.addEventListener('change', () => {
-      formContainer.classList.remove('hidden');
-      formA.classList.add('hidden');
-      formB.classList.add('hidden');
-
-      switch (formSelect.value) {
-        case 'A':
-          formA.classList.remove('hidden');
-          break;
-        case 'B':
-          formB.classList.remove('hidden');
-          break;
-        case 'C':
-          // Draft — nothing to show
-          break;
-      }
+      const selected = formSelect.value;
+      if (selected === 'A') formArea.innerHTML = formA;
+      else if (selected === 'B') formArea.innerHTML = formB;
+      else formArea.innerHTML = formC;
     });
   </script>
 </body>
