@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Approve or Reject Request</title>
+  <title>Approve/Reject Requests</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     body { font-family: Arial; padding: 20px; background: #f8f8f8; }
@@ -14,42 +14,86 @@
       align-items: center;
       color: #333;
     }
-    .home-icon img {
-      width: 24px;
-      height: 24px;
+    .home-icon i {
+      font-size: 24px;
+      color: #0078d4;
       margin-right: 5px;
     }
-    .home-icon:hover {
-      color: #0078D4;
+    .home-icon span {
+      font-size: 18px;
     }
-    .approve-reject-container {
+    .table-container {
       margin: 80px auto 0 auto;
       background: #fff;
       border-radius: 10px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       padding: 30px 40px;
-      max-width: 400px;
-      text-align: center;
+      max-width: 800px;
     }
-    .action-btn {
-      font-size: 22px;
-      padding: 12px 32px;
-      margin: 20px 20px 0 20px;
-      border: none;
-      border-radius: 6px;
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    th, td {
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+      text-align: left;
+    }
+    th {
+      background: #f0f0f0;
+    }
+    .clickable-id span {
       cursor: pointer;
-      color: #fff;
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
+      text-decoration: underline;
+      color: #0078D4;
     }
-    .approve-btn { background: #28a745; }
-    .approve-btn:hover { background: #218838; }
-    .reject-btn { background: #dc3545; }
-    .reject-btn:hover { background: #b52a37; }
+    .action-select {
+      padding: 6px 12px;
+      font-size: 16px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    .popup-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.3);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .popup {
+      background: #fff;
+      border-radius: 10px;
+      padding: 30px 40px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+      min-width: 320px;
+      max-width: 90vw;
+      position: relative;
+      animation: fadeIn 0.2s;
+    }
+    .popup h3 {
+      margin-top: 0;
+      color: #0078d4;
+    }
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 14px;
+      font-size: 22px;
+      color: #888;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+    @keyframes fadeIn {
+      from { transform: scale(0.95); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
     .result-msg {
-      margin-top: 30px;
-      font-size: 18px;
+      margin-top: 10px;
+      font-size: 16px;
       color: #0078d4;
       font-weight: bold;
     }
@@ -57,24 +101,149 @@
 </head>
 <body>
   <a href="index.html" class="home-icon">
-    <img src="https://cdn-icons-png.flaticon.com/512/25/25694.png" alt="Home">
+    <i class="fa-solid fa-house"></i>
+    <span>Home</span>
   </a>
-  <div class="approve-reject-container">
-    <h2>Approve or Reject Request</h2>
-    <button class="action-btn approve-btn" onclick="showResult('approved')">
-      <i class="fa-solid fa-check"></i> Approve
-    </button>
-    <button class="action-btn reject-btn" onclick="showResult('rejected')">
-      <i class="fa-solid fa-xmark"></i> Reject
-    </button>
-    <div class="result-msg" id="resultMsg"></div>
+  <div class="table-container">
+    <h2>Approve/Reject Requests</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Request ID</th>
+          <th>Type</th>
+          <th>Status</th>
+          <th>Requester</th>
+          <th>Manager</th>
+          <th>Date</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="clickable-id" data-id="REQ001">
+            <span onclick="showPopup('REQ001')">📄 REQ001</span>
+          </td>
+          <td>New Supplier Request</td>
+          <td>Pending</td>
+          <td>Mohamed</td>
+          <td>Ali</td>
+          <td>2024-07-01</td>
+          <td>
+            <select class="action-select" onchange="handleAction(this, 'REQ001')">
+              <option value="">--Select--</option>
+              <option value="approve">Approve</option>
+              <option value="reject">Reject</option>
+            </select>
+            <div class="result-msg" id="result-REQ001"></div>
+          </td>
+        </tr>
+        <tr>
+          <td class="clickable-id" data-id="REQ002">
+            <span onclick="showPopup('REQ002')">📄 REQ002</span>
+          </td>
+          <td>Customer Account (Site Creation)</td>
+          <td>Pending</td>
+          <td>Fatima</td>
+          <td>Hassan</td>
+          <td>2024-07-02</td>
+          <td>
+            <select class="action-select" onchange="handleAction(this, 'REQ002')">
+              <option value="">--Select--</option>
+              <option value="approve">Approve</option>
+              <option value="reject">Reject</option>
+            </select>
+            <div class="result-msg" id="result-REQ002"></div>
+          </td>
+        </tr>
+        <tr>
+          <td class="clickable-id" data-id="REQ003">
+            <span onclick="showPopup('REQ003')">📄 REQ003</span>
+          </td>
+          <td>Other</td>
+          <td>Pending</td>
+          <td>Ahmed</td>
+          <td>Mohamed</td>
+          <td>2024-07-03</td>
+          <td>
+            <select class="action-select" onchange="handleAction(this, 'REQ003')">
+              <option value="">--Select--</option>
+              <option value="approve">Approve</option>
+              <option value="reject">Reject</option>
+            </select>
+            <div class="result-msg" id="result-REQ003"></div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="popup-overlay" id="popupOverlay">
+    <div class="popup" id="popupContent">
+      <button class="close-btn" onclick="closePopup()">&times;</button>
+      <h3 id="popupTitle"></h3>
+      <div id="popupDetails"></div>
+    </div>
   </div>
   <script>
-    function showResult(action) {
-      const msg = action === 'approved'
-        ? '✅ Request Approved!'
-        : '❌ Request Rejected!';
-      document.getElementById('resultMsg').textContent = msg;
+    // Request details data
+    const requestDetails = {
+      REQ001: {
+        id: 'REQ001',
+        type: 'New Supplier Request',
+        status: 'Pending',
+        requester: 'Mohamed',
+        manager: 'Ali',
+        date: '2024-07-01',
+        description: 'Supplier onboarding for new vendor.'
+      },
+      REQ002: {
+        id: 'REQ002',
+        type: 'Customer Account (Site Creation)',
+        status: 'Pending',
+        requester: 'Fatima',
+        manager: 'Hassan',
+        date: '2024-07-02',
+        description: 'Site creation for new customer account.'
+      },
+      REQ003: {
+        id: 'REQ003',
+        type: 'Other',
+        status: 'Pending',
+        requester: 'Ahmed',
+        manager: 'Mohamed',
+        date: '2024-07-03',
+        description: 'Miscellaneous request.'
+      }
+    };
+
+    function showPopup(id) {
+      const req = requestDetails[id];
+      document.getElementById('popupTitle').textContent = req.type + ' (' + req.id + ')';
+      document.getElementById('popupDetails').innerHTML = `
+        <strong>Status:</strong> ${req.status}<br>
+        <strong>Requester:</strong> ${req.requester}<br>
+        <strong>Manager:</strong> ${req.manager}<br>
+        <strong>Date:</strong> ${req.date}<br>
+        <strong>Description:</strong> ${req.description}
+      `;
+      document.getElementById('popupOverlay').style.display = 'flex';
+    }
+
+    function closePopup() {
+      document.getElementById('popupOverlay').style.display = 'none';
+    }
+
+    function handleAction(select, id) {
+      const value = select.value;
+      const msgDiv = document.getElementById('result-' + id);
+      if (value === 'approve') {
+        msgDiv.textContent = '✅ Approved';
+        msgDiv.style.color = '#28a745';
+      } else if (value === 'reject') {
+        msgDiv.textContent = '❌ Rejected';
+        msgDiv.style.color = '#dc3545';
+      } else {
+        msgDiv.textContent = '';
+      }
     }
   </script>
 </body>
