@@ -7,47 +7,53 @@
   <style>
     body { font-family: Arial; padding: 20px; background: #f8f8f8; }
     .form-area { margin-top: 20px; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-    select, input, textarea, button { font-size: 16px; margin: 5px 0; padding: 8px; width: 100%; border-radius: 4px; border: 1px solid #ccc; }
+    select, input, textarea, button { font-size: 16px; margin: 5px 0; padding: 8px; width: 100%; }
     h2 { margin-bottom: 10px; }
-    .section-title { font-weight: bold; margin-top: 20px; border-bottom: 1px solid #ccc; padding-bottom: 5px; color: #444; }
+    .section-title { font-weight: bold; margin-top: 20px; border-bottom: 1px solid #ccc; padding-bottom: 5px; }
     .approval { display: flex; gap: 10px; margin-top: 10px; }
     table.dataTable thead th { background-color: #eee; }
-    .popup {
+    .popup-overlay {
       display: none;
       position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .popup {
       background: #fff;
       padding: 20px;
       border-radius: 10px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-      z-index: 1000;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
       width: 400px;
+      position: relative;
+      animation: fadeIn 0.3s ease-in-out;
     }
-    .popup h3 { margin-top: 0; }
-    .popup .close-btn {
-      float: right;
+    .popup h3 {
+      margin-top: 0;
+    }
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 18px;
       cursor: pointer;
-      color: #aaa;
+      color: #888;
     }
-    .popup .close-btn:hover {
-      color: red;
+    @keyframes fadeIn {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
     }
-    .overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.5);
-      display: none;
-      z-index: 999;
+    .clickable-id {
+      cursor: pointer;
+      color: #0078d4;
+      text-decoration: underline;
     }
   </style>
 </head>
 <body>
-  <h2><i class="fa-solid fa-clipboard-list"></i> Select a Form</h2>
+  <h2>Select a Form</h2>
   <label for="formSelect">Choose form:</label>
   <select id="formSelect">
     <option value="">--Select--</option>
@@ -58,7 +64,7 @@
 
   <div class="form-area" id="formArea"></div>
 
-  <h2><i class="fa-solid fa-clock-rotate-left"></i> Previous Requests</h2>
+  <h2>Previous Requests</h2>
   <table id="requestsTable" class="display" style="width:100%">
     <thead>
       <tr>
@@ -71,18 +77,19 @@
       </tr>
     </thead>
     <tbody>
-      <tr data-details='{"id":"REQ001","type":"New Supplier","status":"Approved","requester":"Mohamed","manager":"Ali","date":"2024-06-01"}'><td class="clickable">REQ001</td><td>New Supplier</td><td>Approved</td><td>Mohamed</td><td>Ali</td><td>2024-06-01</td></tr>
-      <tr data-details='{"id":"REQ002","type":"Customer Account","status":"Rejected","requester":"Mohamed","manager":"Ali","date":"2024-06-15"}'><td class="clickable">REQ002</td><td>Customer Account</td><td>Rejected</td><td>Mohamed</td><td>Ali</td><td>2024-06-15</td></tr>
-      <tr data-details='{"id":"REQ003","type":"Other","status":"Pending","requester":"Mohamed","manager":"Hassan","date":"2024-07-01"}'><td class="clickable">REQ003</td><td>Other</td><td>Pending</td><td>Mohamed</td><td>Hassan</td><td>2024-07-01</td></tr>
-      <tr data-details='{"id":"REQ004","type":"New Supplier","status":"Not Approved","requester":"Mohamed","manager":"Omar","date":"2024-07-20"}'><td class="clickable">REQ004</td><td>New Supplier</td><td>Not Approved</td><td>Mohamed</td><td>Omar</td><td>2024-07-20</td></tr>
+      <tr><td class="clickable-id" data-id="REQ001">REQ001</td><td>New Supplier</td><td>Approved</td><td>Mohamed</td><td>Ali</td><td>2024-06-01</td></tr>
+      <tr><td class="clickable-id" data-id="REQ002">REQ002</td><td>Customer Account</td><td>Rejected</td><td>Mohamed</td><td>Ali</td><td>2024-06-15</td></tr>
+      <tr><td class="clickable-id" data-id="REQ003">REQ003</td><td>Other</td><td>Pending</td><td>Mohamed</td><td>Hassan</td><td>2024-07-01</td></tr>
+      <tr><td class="clickable-id" data-id="REQ004">REQ004</td><td>New Supplier</td><td>Not Approved</td><td>Mohamed</td><td>Omar</td><td>2024-07-20</td></tr>
     </tbody>
   </table>
 
-  <div class="overlay" id="overlay"></div>
-  <div class="popup" id="popup">
-    <span class="close-btn" id="closePopup">&times;</span>
-    <h3>Request Details</h3>
-    <div id="popupContent"></div>
+  <div class="popup-overlay" id="popupOverlay">
+    <div class="popup">
+      <span class="close-btn" onclick="closePopup()">&times;</span>
+      <h3><i class="fa-solid fa-info-circle"></i> Request Details</h3>
+      <div id="popupContent"></div>
+    </div>
   </div>
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -91,26 +98,109 @@
     $(document).ready(function() {
       $('#requestsTable').DataTable();
 
-      $('.clickable').on('click', function() {
-        const row = $(this).closest('tr');
-        const details = row.data('details');
-        let html = `
-          <p><strong>ID:</strong> ${details.id}</p>
-          <p><strong>Type:</strong> ${details.type}</p>
-          <p><strong>Status:</strong> ${details.status}</p>
-          <p><strong>Requester:</strong> ${details.requester}</p>
-          <p><strong>Manager:</strong> ${details.manager}</p>
-          <p><strong>Date:</strong> ${details.date}</p>
-        `;
-        $('#popupContent').html(html);
-        $('#overlay').fadeIn();
-        $('#popup').fadeIn();
-      });
+      $('.clickable-id').on('click', function() {
+        const requestId = $(this).data('id');
+        let details = {
+          'REQ001': 'New Supplier Request - Approved by Ali on 2024-06-01',
+          'REQ002': 'Customer Account - Rejected by Ali on 2024-06-15',
+          'REQ003': 'Other Request - Pending with Hassan',
+          'REQ004': 'New Supplier - Not Approved by Omar'
+        };
 
-      $('#closePopup, #overlay').on('click', function() {
-        $('#overlay').fadeOut();
-        $('#popup').fadeOut();
+        const info = details[requestId] || 'No additional information available.';
+        document.getElementById('popupContent').innerText = info;
+
+        try {
+          document.getElementById('popupOverlay').style.display = 'flex';
+        } catch (e) {
+          alert(info);
+        }
       });
+    });
+
+    function closePopup() {
+      document.getElementById('popupOverlay').style.display = 'none';
+    }
+
+    const formArea = document.getElementById('formArea');
+    const formSelect = document.getElementById('formSelect');
+
+    const formA = `<div><div class='section-title'>New Supplier Request</div>
+      <input placeholder='Address'>
+      <input placeholder='Supplier Code'>
+      <input placeholder='Operating Unit'>
+      <input placeholder='Supplier Site Name'>
+      <input placeholder='Purchasing Pay'>
+      <input placeholder='Ship To Location'>
+      <input placeholder='Bill To Location'>
+      <input placeholder='Pay Group'>
+      <input placeholder='Liability'>
+      <input placeholder='Prepayment'>
+      <input placeholder='Bills Payable'>
+      <input placeholder='Payment Terms'>
+      <input placeholder='Currency'>
+      <input placeholder='Payment Method'>
+      <input placeholder='Account No.'>
+      <input placeholder='IBAN Number'>
+      <input placeholder='Bank Name'>
+      <input placeholder='Bank Account Name'>
+      <input placeholder='Bank Address'>
+      <input placeholder='SWIFT Code'>
+      <div class='approval'>
+        <input placeholder='Purchase Manager/Supervisor'>
+        <input placeholder='Finance Manager'>
+        <input placeholder='Created By'>
+      </div></div>`;
+
+    const formB = `<div><div class='section-title'>Customer Account (Site Creation)</div>
+      <input placeholder='Customer Name'>
+      <input placeholder='Account Number'>
+      <input placeholder='Operating Unit'>
+      <input placeholder='Profile Collector'>
+      <input placeholder='Bill-To Site Location'>
+      <input placeholder='Country'>
+      <input placeholder='Address Line 1'>
+      <input placeholder='Address Line 2'>
+      <input placeholder='Address Line 3'>
+      <input placeholder='Address Line 4'>
+      <input placeholder='Sales Territory'>
+      <input placeholder='EDI Location'>
+      <input placeholder='Customer Sector'>
+      <input placeholder='Customer Sub Sector'>
+      <input placeholder='Pick Rule'>
+      <input placeholder='Customer Group'>
+      <input placeholder='Sales Rep Name'>
+      <input placeholder='Collector'>
+      <input placeholder='Payment Terms'>
+      <input placeholder='Currency'>
+      <input placeholder='Order Credit Limit'>
+      <input placeholder='Credit Limit'>
+      <input placeholder='Ship-To Site Location'>
+      <input placeholder='Bill-To Site Location'>
+      <input placeholder='Country'>
+      <input placeholder='Address Line 1'>
+      <input placeholder='Address Line 2'>
+      <input placeholder='Address Line 3'>
+      <input placeholder='Address Line 4'>
+      <input placeholder='Sales Territory'>
+      <input placeholder='EDI Location'>
+      <input placeholder='Customer Sector'>
+      <input placeholder='Customer Sub Sector'>
+      <input placeholder='Pick Rule'>
+      <input placeholder='Customer Group'>
+      <div class='approval'>
+        <input placeholder='Manager/Supervisor'>
+        <input placeholder='Finance Manager'>
+        <input placeholder='Created By'>
+      </div></div>`;
+
+    const formC = `<div><p>No custom fields for this form.</p></div>`;
+
+    formSelect.addEventListener('change', () => {
+      const selected = formSelect.value;
+      if (selected === 'A') formArea.innerHTML = formA;
+      else if (selected === 'B') formArea.innerHTML = formB;
+      else formArea.innerHTML = formC;
     });
   </script>
 </body>
