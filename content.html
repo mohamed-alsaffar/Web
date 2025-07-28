@@ -88,17 +88,32 @@
     .home-icon:hover {
       color: #0078D4;
     }
+    /* Add this to your CSS */
+.nav-icons {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  display: flex;
+  gap: 18px;
+  align-items: center;
+}
+.home-icon {
+  position: static; /* Remove absolute for flex alignment */
+}
   </style>
 </head>
 <body>
-    <a href="index.html" class="home-icon">
+<!-- Replace your two <a> tags with this: -->
+<div class="nav-icons">
+  <a href="index.html" class="home-icon">
     <img src="https://cdn-icons-png.flaticon.com/512/25/25694.png" alt="Home">
     Home
   </a>
   <a href="approve-reject.html" class="home-icon">
-  <i class="fa-solid fa-shield-check" style="font-size:24px; color:#0078d4; margin-right:5px;"></i>
-  <span style="font-size:18px;">Approve/Reject</span>
-</a>
+    <i class="fa-solid fa-shield-check" style="font-size:24px; color:#0078d4; margin-right:5px;"></i>
+    <span style="font-size:18px;">Approve/Reject</span>
+  </a>
+</div>
   <h2>Select a Form</h2>
   <label for="formSelect">Choose form:</label>
   <select id="formSelect">
