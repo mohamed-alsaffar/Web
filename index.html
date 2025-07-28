@@ -3,7 +3,7 @@
 <head>
   <title>Dashboard</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://statics.teams.cdn.office.net/sdk/v1.13.1/js/MicrosoftTeams.min.js"></script>
+<script src="https://statics.teams.cdn.office.net/sdk/v1.12.0/js/MicrosoftTeams.min.js"></script>
   <style>
     body { font-family: Arial; padding: 20px; background: #f8f8f8; }
     .dashboard-container { display: flex; flex-wrap: wrap; gap: 30px; justify-content: center; }
@@ -14,6 +14,7 @@
   </style>
 </head>
 <body>
+    <!-- Once Rejesot the app should show  -->
       <div id="userInfo" style="text-align:center; margin-bottom:18px; font-size:17px; color:#333;"></div>
 
   <h1>Dashboard</h1>
@@ -110,16 +111,17 @@
       options: { responsive: true, plugins: { title: { display: true, text: 'Requests Over Time' } } }
     });
 
-microsoftTeams.initialize();
+microsoftTeams.app.initialize().then(() => {
+  microsoftTeams.app.getContext().then((context) => {
+    const userDisplayName = context.user?.displayName || "Unknown User";
+    const userEmail = context.user?.email || context.user?.userPrincipalName || "Unknown Email";
+    const userTenantId = context.user?.tenant?.id || context.app?.tenant?.id || context?.tenant?.id || "Unknown Tenant";
 
-microsoftTeams.getContext(function(context) {
-  const userDisplayName = context.userDisplayName || context.userName || context.upn || "Unknown User";
-  const userEmail = context.userEmail || context.upn || "Unknown Email";
-  const userCompany = context.teamSiteDomain || context.tid || "Unknown Company";
-
-  document.getElementById('userInfo').innerHTML =
-    `<strong>${userDisplayName}</strong> &nbsp;|&nbsp; ${userEmail} &nbsp;|&nbsp; ${userCompany}`;
+    document.getElementById('userInfo').innerHTML =
+      `<strong>${userDisplayName}</strong> &nbsp;|&nbsp; ${userEmail} &nbsp;|&nbsp; Tenant ID: ${userTenantId}`;
+  });
 });
+
   </script>
 </body>
 </html>
