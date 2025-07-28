@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Approve or Reject Request</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body { font-family: Arial; padding: 20px; background: #f8f8f8; }
+    .home-icon {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      color: #333;
+    }
+    .home-icon img {
+      width: 24px;
+      height: 24px;
+      margin-right: 5px;
+    }
+    .home-icon:hover {
+      color: #0078D4;
+    }
+    .approve-reject-container {
+      margin: 80px auto 0 auto;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      padding: 30px 40px;
+      max-width: 400px;
+      text-align: center;
+    }
+    .action-btn {
+      font-size: 22px;
+      padding: 12px 32px;
+      margin: 20px 20px 0 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .approve-btn { background: #28a745; }
+    .approve-btn:hover { background: #218838; }
+    .reject-btn { background: #dc3545; }
+    .reject-btn:hover { background: #b52a37; }
+    .result-msg {
+      margin-top: 30px;
+      font-size: 18px;
+      color: #0078d4;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <a href="index.html" class="home-icon">
+    <img src="https://cdn-icons-png.flaticon.com/512/25/25694.png" alt="Home">
+  </a>
+  <div class="approve-reject-container">
+    <h2>Approve or Reject Request</h2>
+    <button class="action-btn approve-btn" onclick="showResult('approved')">
+      <i class="fa-solid fa-check"></i> Approve
+    </button>
+    <button class="action-btn reject-btn" onclick="showResult('rejected')">
+      <i class="fa-solid fa-xmark"></i> Reject
+    </button>
+    <div class="result-msg" id="resultMsg"></div>
+  </div>
+  <script>
+    function showResult(action) {
+      const msg = action === 'approved'
+        ? '✅ Request Approved!'
+        : '❌ Request Rejected!';
+      document.getElementById('resultMsg').textContent = msg;
+    }
+  </script>
+</body>
+</html>
