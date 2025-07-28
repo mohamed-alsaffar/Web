@@ -50,6 +50,24 @@
       color: #0078d4;
       text-decoration: underline;
     }
+        .time-card {
+      background: white;
+      border-radius: 12px;
+      padding: 30px 40px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      min-width: 300px;
+    }
+    .time-card h2 {
+      font-size: 24px;
+      color: #333;
+      margin-bottom: 10px;
+    }
+    .time-card .time {
+      font-size: 28px;
+      font-weight: bold;
+      color: #0078d4;
+    }
   </style>
 </head>
 <body>
@@ -120,7 +138,23 @@
       <div id="popupContent"></div>
     </div>
   </div>
+ <div class="time-card">
+    <h2>Current UTC Time</h2>
+    <div class="time" id="timeDisplay">Loading...</div>
+  </div>
 
+  <script>
+    window.onload = async function () {
+      try {
+        const res = await fetch('https://timeapi.io/api/Time/current/zone?timeZone=UTC');
+        const data = await res.json();
+        const time = new Date(data.dateTime).toLocaleTimeString('en-GB', { hour12: false });
+        document.getElementById('timeDisplay').textContent = time;
+      } catch (err) {
+        document.getElementById('timeDisplay').textContent = "Failed to load time";
+      }
+    }
+  </script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
   <script>
