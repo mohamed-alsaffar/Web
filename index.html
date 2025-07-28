@@ -1,286 +1,110 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Form Selector</title>
-  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <title>Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body { font-family: Arial; padding: 20px; background: #f8f8f8; }
-    .form-area { margin-top: 20px; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-    select, input, textarea, button { font-size: 16px; margin: 5px 0; padding: 8px; width: 100%; }
-    h2 { margin-bottom: 10px; }
-    .section-title { font-weight: bold; margin-top: 20px; border-bottom: 1px solid #ccc; padding-bottom: 5px; }
-    .approval { display: flex; gap: 10px; margin-top: 10px; }
-    table.dataTable thead th { background-color: #eee; }
-    .popup-overlay {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.6);
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-    }
-    .popup {
-      background: #fff;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-      width: 400px;
-      position: relative;
-      animation: fadeIn 0.3s ease-in-out;
-    }
-    .popup h3 {
-      margin-top: 0;
-    }
-    .close-btn {
-      position: absolute;
-      top: 10px;
-      right: 15px;
-      font-size: 18px;
-      cursor: pointer;
-      color: #888;
-    }
-    @keyframes fadeIn {
-      from { transform: scale(0.8); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
-    .clickable-id {
-      cursor: pointer;
-      color: #0078d4;
-      text-decoration: underline;
-    }
-        .time-card {
-      background: white;
-      border-radius: 12px;
-      padding: 30px 40px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      text-align: center;
-      min-width: 300px;
-    }
-    .time-card h2 {
-      font-size: 24px;
-      color: #333;
-      margin-bottom: 10px;
-    }
-    .time-card .time {
-      font-size: 28px;
-      font-weight: bold;
-      color: #0078d4;
-    }
+    .dashboard-container { display: flex; flex-wrap: wrap; gap: 30px; justify-content: center; }
+    .chart-card { background: #fff; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 20px; width: 400px; }
+    h1 { text-align: center; }
+    .nav-btn { display: block; margin: 30px auto 0 auto; padding: 12px 32px; font-size: 18px; background: #0078d4; color: #fff; border: none; border-radius: 6px; cursor: pointer; }
+    .nav-btn:hover { background: #005fa3; }
   </style>
 </head>
 <body>
-  <h2>Select a Form</h2>
-  <label for="formSelect">Choose form:</label>
-  <select id="formSelect">
-    <option value="">--Select--</option>
-    <option value="A">New Supplier Request</option>
-    <option value="B">Customer Account (Site Creation)</option>
-    <option value="C">Other</option>
-  </select>
-
-  <div class="form-area" id="formArea"></div>
-
-  <h2>Previous Requests</h2>
-  <table id="requestsTable" class="display" style="width:100%">
-    <thead>
-      <tr>
-        <th>Request ID</th>
-        <th>Type</th>
-        <th>Status</th>
-        <th>Requester</th>
-        <th>Manager</th>
-        <th>Date</th>
-      </tr>
-    </thead>
-<tbody>
-  <tr>
-    <td class="clickable-id" data-id="REQ001">
-      <span style="cursor:pointer; text-decoration:underline; color:#0078D4;">
-        📄 REQ001
-      </span>
-    </td>
-    <td>New Supplier</td><td>Approved</td><td>Mohamed</td><td>Ali</td><td>2024-06-01</td>
-  </tr>
-  <tr>
-    <td class="clickable-id" data-id="REQ002">
-      <span style="cursor:pointer; text-decoration:underline; color:#0078D4;">
-        📄 REQ002
-      </span>
-    </td>
-    <td>Customer Account</td><td>Rejected</td><td>Mohamed</td><td>Ali</td><td>2024-06-15</td>
-  </tr>
-  <tr>
-    <td class="clickable-id" data-id="REQ003">
-      <span style="cursor:pointer; text-decoration:underline; color:#0078D4;">
-        📄 REQ003
-      </span>
-    </td>
-    <td>Other</td><td>Pending</td><td>Mohamed</td><td>Hassan</td><td>2024-07-01</td>
-  </tr>
-  <tr>
-    <td class="clickable-id" data-id="REQ004">
-      <span style="cursor:pointer; text-decoration:underline; color:#0078D4;">
-        📄 REQ004
-      </span>
-    </td>
-    <td>New Supplier</td><td>Not Approved</td><td>Mohamed</td><td>Mohamed</td><td>2024-07-20</td>
-  </tr>
-</tbody>
-
-  </table>
-
-  <div class="popup-overlay" id="popupOverlay">
-    <div class="popup">
-      <span class="close-btn" onclick="closePopup()">&times;</span>
-      <h3><i class="fa-solid fa-info-circle"></i> Request Details</h3>
-      <div id="popupContent"></div>
+  <h1>Dashboard</h1>
+  <div class="dashboard-container">
+    <div class="chart-card">
+      <canvas id="chart1"></canvas>
+    </div>
+    <div class="chart-card">
+      <canvas id="chart2"></canvas>
+    </div>
+    <div class="chart-card">
+      <canvas id="chart3"></canvas>
+    </div>
+    <div class="chart-card">
+      <canvas id="chart4"></canvas>
     </div>
   </div>
- <div class="time-card">
-    <h2>Current UTC Time From API</h2>
-    <div class="time" id="timeDisplay">Loading...</div>
-  </div>
-
+  <button class="nav-btn" onclick="window.location.href='content.html'">Go to Request Page</button>
   <script>
-    window.onload = async function () {
-      try {
-        const res = await fetch('https://timeapi.io/api/Time/current/zone?timeZone=UTC');
-        const data = await res.json();
-        const time = new Date(data.dateTime).toLocaleTimeString('en-GB', { hour12: false });
-        document.getElementById('timeDisplay').textContent = time;
-      } catch (err) {
-        document.getElementById('timeDisplay').textContent = "Failed to load time";
-      }
-    }
-  </script>
-   <script>
-    async function updateTime() {
-      try {
-        const res = await fetch('https://timeapi.io/api/Time/current/zone?timeZone=UTC');
-        const data = await res.json();
-        const time = new Date(data.dateTime).toLocaleTimeString('en-GB', { hour12: false });
-        document.getElementById('timeDisplay').textContent = time;
-      } catch (err) {
-        document.getElementById('timeDisplay').textContent = "Failed to load time";
-      }
-    }
+    // Table data
+    const requests = [
+      { id: 'REQ001', type: 'New Supplier', status: 'Approved', requester: 'Mohamed', manager: 'Ali', date: '2024-06-01' },
+      { id: 'REQ002', type: 'Customer Account', status: 'Rejected', requester: 'Mohamed', manager: 'Ali', date: '2024-06-15' },
+      { id: 'REQ003', type: 'Other', status: 'Pending', requester: 'Mohamed', manager: 'Hassan', date: '2024-07-01' },
+      { id: 'REQ004', type: 'New Supplier', status: 'Not Approved', requester: 'Mohamed', manager: 'Mohamed', date: '2024-07-20' }
+    ];
 
-    window.onload = function () {
-      updateTime();
-      setInterval(updateTime, 500);
-    }
-  </script>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-  <script>
-    $(document).ready(function() {
-      $('#requestsTable').DataTable();
-
-      $('.clickable-id').on('click', function() {
-        const requestId = $(this).data('id');
-        let details = {
-          'REQ001': 'New Supplier Request - Approved by Ali on 2024-06-01',
-          'REQ002': 'Customer Account - Rejected by Ali on 2024-06-15',
-          'REQ003': 'Other Request - Pending with Hassan',
-          'REQ004': 'New Supplier - Not Approved by Omar'
-        };
-
-        const info = details[requestId] || 'No additional information available.';
-        document.getElementById('popupContent').innerText = info;
-
-        try {
-          document.getElementById('popupOverlay').style.display = 'flex';
-        } catch (e) {
-          alert(info);
-        }
-      });
+    // Chart 1: Requests by Type
+    const typeCounts = {};
+    requests.forEach(r => { typeCounts[r.type] = (typeCounts[r.type] || 0) + 1; });
+    new Chart(document.getElementById('chart1'), {
+      type: 'bar',
+      data: {
+        labels: Object.keys(typeCounts),
+        datasets: [{
+          label: 'Requests by Type',
+          data: Object.values(typeCounts),
+          backgroundColor: ['#0078d4', '#00bfae', '#ffb900']
+        }]
+      },
+      options: { responsive: true, plugins: { title: { display: true, text: 'Requests by Type' } } }
     });
 
-    function closePopup() {
-      document.getElementById('popupOverlay').style.display = 'none';
-    }
+    // Chart 2: Requests by Status
+    const statusCounts = {};
+    requests.forEach(r => { statusCounts[r.status] = (statusCounts[r.status] || 0) + 1; });
+    new Chart(document.getElementById('chart2'), {
+      type: 'pie',
+      data: {
+        labels: Object.keys(statusCounts),
+        datasets: [{
+          label: 'Status',
+          data: Object.values(statusCounts),
+          backgroundColor: ['#28a745', '#dc3545', '#ffc107', '#6c757d']
+        }]
+      },
+      options: { responsive: true, plugins: { title: { display: true, text: 'Requests by Status' } } }
+    });
 
-    const formArea = document.getElementById('formArea');
-    const formSelect = document.getElementById('formSelect');
+    // Chart 3: Requests by Manager
+    const managerCounts = {};
+    requests.forEach(r => { managerCounts[r.manager] = (managerCounts[r.manager] || 0) + 1; });
+    new Chart(document.getElementById('chart3'), {
+      type: 'doughnut',
+      data: {
+        labels: Object.keys(managerCounts),
+        datasets: [{
+          label: 'Manager',
+          data: Object.values(managerCounts),
+          backgroundColor: ['#0078d4', '#00bfae', '#ffb900', '#dc3545']
+        }]
+      },
+      options: { responsive: true, plugins: { title: { display: true, text: 'Requests by Manager' } } }
+    });
 
-    const formA = `<div><div class='section-title'>New Supplier Request</div>
-      <input placeholder='Address'>
-      <input placeholder='Supplier Code'>
-      <input placeholder='Operating Unit'>
-      <input placeholder='Supplier Site Name'>
-      <input placeholder='Purchasing Pay'>
-      <input placeholder='Ship To Location'>
-      <input placeholder='Bill To Location'>
-      <input placeholder='Pay Group'>
-      <input placeholder='Liability'>
-      <input placeholder='Prepayment'>
-      <input placeholder='Bills Payable'>
-      <input placeholder='Payment Terms'>
-      <input placeholder='Currency'>
-      <input placeholder='Payment Method'>
-      <input placeholder='Account No.'>
-      <input placeholder='IBAN Number'>
-      <input placeholder='Bank Name'>
-      <input placeholder='Bank Account Name'>
-      <input placeholder='Bank Address'>
-      <input placeholder='SWIFT Code'>
-      <div class='approval'>
-        <input placeholder='Purchase Manager/Supervisor'>
-        <input placeholder='Finance Manager'>
-        <input placeholder='Created By'>
-      </div></div>`;
-
-    const formB = `<div><div class='section-title'>Customer Account (Site Creation)</div>
-      <input placeholder='Customer Name'>
-      <input placeholder='Account Number'>
-      <input placeholder='Operating Unit'>
-      <input placeholder='Profile Collector'>
-      <input placeholder='Bill-To Site Location'>
-      <input placeholder='Country'>
-      <input placeholder='Address Line 1'>
-      <input placeholder='Address Line 2'>
-      <input placeholder='Address Line 3'>
-      <input placeholder='Address Line 4'>
-      <input placeholder='Sales Territory'>
-      <input placeholder='EDI Location'>
-      <input placeholder='Customer Sector'>
-      <input placeholder='Customer Sub Sector'>
-      <input placeholder='Pick Rule'>
-      <input placeholder='Customer Group'>
-      <input placeholder='Sales Rep Name'>
-      <input placeholder='Collector'>
-      <input placeholder='Payment Terms'>
-      <input placeholder='Currency'>
-      <input placeholder='Order Credit Limit'>
-      <input placeholder='Credit Limit'>
-      <input placeholder='Ship-To Site Location'>
-      <input placeholder='Bill-To Site Location'>
-      <input placeholder='Country'>
-      <input placeholder='Address Line 1'>
-      <input placeholder='Address Line 2'>
-      <input placeholder='Address Line 3'>
-      <input placeholder='Address Line 4'>
-      <input placeholder='Sales Territory'>
-      <input placeholder='EDI Location'>
-      <input placeholder='Customer Sector'>
-      <input placeholder='Customer Sub Sector'>
-      <input placeholder='Pick Rule'>
-      <input placeholder='Customer Group'>
-      <div class='approval'>
-        <input placeholder='Manager/Supervisor'>
-        <input placeholder='Finance Manager'>
-        <input placeholder='Created By'>
-      </div></div>`;
-
-    const formC = `<div><p>No custom fields for this form.</p></div>`;
-
-    formSelect.addEventListener('change', () => {
-      const selected = formSelect.value;
-      if (selected === 'A') formArea.innerHTML = formA;
-      else if (selected === 'B') formArea.innerHTML = formB;
-      else formArea.innerHTML = formC;
+    // Chart 4: Requests Over Time (by Month)
+    const monthCounts = {};
+    requests.forEach(r => {
+      const month = r.date.slice(0, 7); // YYYY-MM
+      monthCounts[month] = (monthCounts[month] || 0) + 1;
+    });
+    new Chart(document.getElementById('chart4'), {
+      type: 'line',
+      data: {
+        labels: Object.keys(monthCounts),
+        datasets: [{
+          label: 'Requests per Month',
+          data: Object.values(monthCounts),
+          borderColor: '#0078d4',
+          backgroundColor: 'rgba(0,120,212,0.1)',
+          fill: true
+        }]
+      },
+      options: { responsive: true, plugins: { title: { display: true, text: 'Requests Over Time' } } }
     });
   </script>
 </body>
