@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Temporary Laptop/Desktop Form</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { padding: 30px; }
+    .form-section {
+      margin-bottom: 30px;
+      border: 1px solid #ccc;
+      padding: 20px;
+      border-radius: 10px;
+    }
+    .form-title {
+      font-weight: bold;
+      margin-bottom: 15px;
+      text-transform: uppercase;
+      text-align: center;
+    }
+    canvas { border: 1px solid #ccc; }
+  </style>
+</head>
+<body onload="checkSignature()">
+
+  <h3 class="text-center mb-4">REQUEST FOR TEMPORARY LAPTOP/DESKTOP</h3>
+
+  <form id="requestForm">
+    <!-- Employee Info -->
+    <div class="form-section">
+      <div class="form-title">Employee Information</div>
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label>Name</label>
+          <input type="text" class="form-control" id="name">
+        </div>
+        <div class="col-md-6 mb-3">
+          <label>Employee No.</label>
+          <input type="text" class="form-control" id="employeeNo">
+        </div>
+        <div class="col-md-6 mb-3">
+          <label>Department</label>
+          <input type="text" class="form-control" id="department">
+        </div>
+        <div class="col-md-6 mb-3">
+          <label>Manager</label>
+          <input type="text" class="form-control" id="manager">
+        </div>
+      </div>
+    </div>
+
+    <!-- Device Info -->
+    <div class="form-section">
+      <div class="form-title">Laptop / Desktop Information</div>
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label>Model</label>
+          <input type="text" class="form-control" id="model">
+        </div>
+        <div class="col-md-6 mb-3">
+          <label>Serial</label>
+          <input type="text" class="form-control" id="serial">
+        </div>
+        <div class="col-md-6 mb-3">
+          <label>Start Date</label>
+          <input type="date" class="form-control" id="startDate">
+        </div>
+        <div class="col-md-6 mb-3">
+          <label>End Date</label>
+          <input type="date" class="form-control" id="endDate">
+        </div>
+      </div>
+      <div id="dateWarning" class="text-danger fw-bold" style="display: none;">
+        ❗ End Date must be after Start Date.
+      </div>
+    </div>
+
+    <!-- Access -->
+    <div class="form-section">
+      <div class="form-title">IT Access Required</div>
+      <div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" id="email"><label class="form-check-label" for="email">Email</label></div>
+      <div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" id="mis"><label class="form-check-label" for="mis">MIS</label></div>
+      <div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" id="internet"><label class="form-check-label" for="internet">Internet Access</label></div>
+      <div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" id="fileserver"><label class="form-check-label" for="fileserver">File Server</label></div>
+      <div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" id="vision"><label class="form-check-label" for="vision">Vision</label></div>
+      <div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" id="oracle"><label class="form-check-label" for="oracle">Oracle</label></div>
+      <div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" id="epos"><label class="form-check-label" for="epos">EPOS</label></div>
+      <div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" id="chef"><label class="form-check-label" for="chef">Chef</label></div>
+    </div>
+
+    <!-- Signatures -->
+    <div class="form-section">
+      <div class="form-title">Signature</div>
+      <p class="text-muted">Draw or upload your signature:</p>
+      <div class="row">
+        <div class="col-md-6">
+          <canvas id="signatureCanvas" width="400" height="150"></canvas><br>
+          <button type="button" class="btn btn-sm btn-danger mt-2" onclick="clearCanvas()">Clear</button>
+        </div>
+        <div class="col-md-6">
+          <input type="file" id="signatureUpload" class="form-control mb-2" accept="image/*">
+          <img id="signaturePreview" src="" class="img-fluid border" style="max-height:150px; display:none;" />
+        </div>
+      </div>
+      <div id="signatureWarning" class="text-danger fw-bold mt-2" style="display: none;">
+        ❗ Please provide a signature (drawn or uploaded).
+      </div>
+    </div>
+
+    <!-- Consent -->
+    <div class="form-section">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="consent">
+        <label class="form-check-label" for="consent">
+          I consent BMMI Group to store and process my personal data
+        </label>
+      </div>
+    </div>
+
+    <!-- Submit -->
+    <div class="text-center">
+      <button type="button" class="btn btn-primary" onclick="handleSubmit()">Submit Request</button>
+    </div>
+  </form>
+
+  <script>
+    // Date validation
+    const startInput = document.getElementById("startDate");
+    const endInput = document.getElementById("endDate");
+    const warning = document.getElementById("dateWarning");
+
+    function validateDates() {
+      const start = new Date(startInput.value);
+      const end = new Date(endInput.value);
+      if (start && end && start > end) {
+        warning.style.display = "block";
+        return false;
+      } else {
+        warning.style.display = "none";
+        return true;
+      }
+    }
+    startInput.addEventListener("change", validateDates);
+    endInput.addEventListener("change", validateDates);
+
+    // Signature Canvas
+    const canvas = document.getElementById("signatureCanvas");
+    const ctx = canvas.getContext("2d");
+    let drawing = false;
+    canvas.addEventListener("mousedown", () => drawing = true);
+    canvas.addEventListener("mouseup", () => drawing = false);
+    canvas.addEventListener("mouseout", () => drawing = false);
+    canvas.addEventListener("mousemove", draw);
+    function draw(e) {
+      if (!drawing) return;
+      const rect = canvas.getBoundingClientRect();
+      ctx.lineWidth = 2;
+      ctx.lineCap = "round";
+      ctx.strokeStyle = "#000";
+      ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+    }
+    function clearCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    // Upload Signature
+    const uploadInput = document.getElementById("signatureUpload");
+    const previewImg = document.getElementById("signaturePreview");
+    uploadInput.addEventListener("change", function () {
+      const file = this.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          previewImg.src = e.target.result;
+          previewImg.style.display = "block";
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Onload check if signature is present
+    function checkSignature() {
+      const hasDrawnSignature = !isCanvasBlank(canvas);
+      const hasUploadedSignature = previewImg.src.includes("data:image");
+      if (!hasDrawnSignature && !hasUploadedSignature) {
+        console.warn("No signature provided yet.");
+      } else {
+        console.info("Signature detected on load.");
+      }
+    }
+
+    // Check if canvas is blank
+    function isCanvasBlank(c) {
+      const blank = document.createElement('canvas');
+      blank.width = c.width;
+      blank.height = c.height;
+      return c.toDataURL() === blank.toDataURL();
+    }
+
+    // Form submit logic
+    function handleSubmit() {
+      const validDates = validateDates();
+      const drawnSignature = canvas.toDataURL("image/png");
+      const uploadedSignature = previewImg.src.includes("data:image") ? previewImg.src : null;
+
+      const hasSignature = !isCanvasBlank(canvas) || uploadedSignature;
+      if (!validDates || !hasSignature) {
+        document.getElementById("signatureWarning").style.display = hasSignature ? "none" : "block";
+        return;
+      }
+
+      const formData = {
+        name: document.getElementById("name").value,
+        employeeNo: document.getElementById("employeeNo").value,
+        department: document.getElementById("department").value,
+        manager: document.getElementById("manager").value,
+        model: document.getElementById("model").value,
+        serial: document.getElementById("serial").value,
+        startDate: startInput.value,
+        endDate: endInput.value,
+        access: {
+          email: document.getElementById("email").checked,
+          mis: document.getElementById("mis").checked,
+          internet: document.getElementById("internet").checked,
+          fileserver: document.getElementById("fileserver").checked,
+          vision: document.getElementById("vision").checked,
+          oracle: document.getElementById("oracle").checked,
+          epos: document.getElementById("epos").checked,
+          chef: document.getElementById("chef").checked
+        },
+        signatureBase64: uploadedSignature || drawnSignature,
+        consent: document.getElementById("consent").checked
+      };
+
+      console.log("✅ Form Ready to Send to API:");
+      console.log(formData);
+      alert("Form is valid and collected. Check console for data.");
+    }
+  </script>
+
+</body>
+</html>
