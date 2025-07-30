@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>IT Activity Sign Off</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="p-4">
+    <div class="container">
+        <h2>IT Activity Sign Off</h2>
+        <form>
+            <div class="row mb-3">
+                <div class="col">
+                    <label>First Name</label>
+                    <input type="text" class="form-control">
+                </div>
+                <div class="col">
+                    <label>Last Name</label>
+                    <input type="text" class="form-control">
+                </div>
+            </div>
+            <div class="mb-3">
+                <label>Employee No.</label>
+                <input type="text" class="form-control">
+            </div>
+            <div class="mb-3">
+                <label>Location / Department</label>
+                <input type="text" class="form-control">
+            </div>
+            <div class="mb-3">
+                <label>Job Title</label>
+                <input type="text" class="form-control">
+            </div>
+            <div class="mb-3">
+                <label>Ticket No.</label>
+                <input type="text" class="form-control">
+            </div>
+            <h5>Type of Activity Performed</h5>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="decom" />
+                <label class="form-check-label" for="decom">Decommission</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="backup" />
+                <label class="form-check-label" for="backup">Backup / Restoration</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="clone" />
+                <label class="form-check-label" for="clone">Instance Cloning / Migration</label>
+            </div>
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" id="dr" />
+                <label class="form-check-label" for="dr">Disaster Recovery</label>
+            </div>
+            <div class="mb-3">
+                <label>Activity Description</label>
+                <textarea class="form-control" rows="3"></textarea>
+            </div>
+            <h5>Involved Roles</h5>
+            <div class="mb-3">
+                <label>IT Roles Involved</label>
+                <textarea class="form-control" rows="2"></textarea>
+            </div>
+            <div class="mb-3">
+                <label>Business Roles Involved – If Any</label>
+                <textarea class="form-control" rows="2"></textarea>
+            </div>
+            <h5>Signatories</h5>
+            <div class="mb-3">
+                <label>IT User</label>
+                <input type="text" class="form-control">
+            </div>
+            <div class="mb-3">
+                <label>Date</label>
+                <input type="date" class="form-control">
+            </div>
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="consent">
+                <label class="form-check-label" for="consent">I consent BMMI Group to store and process my personal data</label>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

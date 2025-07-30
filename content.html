@@ -164,13 +164,24 @@
   </a>
 </div> -->
   <h2>Select a Form</h2>
-  <label for="formSelect">Choose form:</label>
-  <select id="formSelect">
-    <option value="">--Select--</option>
-    <option value="A">New Supplier Request</option>
-    <option value="B">Customer Account (Site Creation)</option>
-    <option value="C">Other</option>
-  </select>
+<label for="formSelect">Choose form:</label>
+<select id="formSelect" class="form-select" onchange="navigateToForm()">
+  <option value="">--Select--</option>
+  <option value="Delegation-of-Revoked-User.html">Delegation of Revoked User</option>
+  <option value="Employee-Access-Modification.html">Employee Access Modification</option>
+  <option value="employee-new-access.html">Employee New Access</option>
+  <option value="external-user-access.html">External User Access</option>
+  <option value="Request-for-Change.html">Request for Change</option>
+  <option value="Temporary-Employee-Access.html">Temporary Employee Access</option>
+  <option value="IT-Asset-Transfer-Request.html">IT Asset Transfer Request</option>
+  <option value="IT-Activity-Sign-Off.html">IT Activity Sign Off</option>
+  <option value="OU-Activity-Sign-Off.html">OU Activity Sign Off</option>
+  <option value="Service-Permission-Form.html">Service Permission Form</option>
+  <option value="Request-for-Internet-Access.html">Request for Internet Access</option>
+  <option value="Request-for-Temporary-Laptop-Desktop.html">Request for Temporary Laptop/Desktop</option>
+  <option value="IT-Asset-Disposal.html">IT Asset Disposal</option>
+  <option value="My-Micros-Access.html">MyMicros Access</option>
+</select>
 
   <div class="form-area" id="formArea"></div>
 
@@ -293,110 +304,15 @@
     function closePopup() {
       document.getElementById('popupOverlay').style.display = 'none';
     }
-
-    const formArea = document.getElementById('formArea');
+      function navigateToForm() {
     const formSelect = document.getElementById('formSelect');
+    const selectedValue = formSelect.value;
+    if (selectedValue) {
+      window.location.href = selectedValue;
+    }
+  }
 
-// ...existing code...
-const formA = `
-  <div class="form-card">
-    <div class="section-title"><i class="fa-solid fa-industry"></i> New Supplier Request</div>
-    <div class="form-grid">
-      <input placeholder='Address'>
-      <input placeholder='Supplier Code'>
-      <input placeholder='Operating Unit'>
-      <input placeholder='Supplier Site Name'>
-      <input placeholder='Purchasing Pay'>
-      <input placeholder='Ship To Location'>
-      <input placeholder='Bill To Location'>
-      <input placeholder='Pay Group'>
-      <input placeholder='Liability'>
-      <input placeholder='Prepayment'>
-      <input placeholder='Bills Payable'>
-      <input placeholder='Payment Terms'>
-      <input placeholder='Currency'>
-      <input placeholder='Payment Method'>
-      <input placeholder='Account No.'>
-      <input placeholder='IBAN Number'>
-      <input placeholder='Bank Name'>
-      <input placeholder='Bank Account Name'>
-      <input placeholder='Bank Address'>
-      <input placeholder='SWIFT Code'>
-    </div>
-    <div class="approval-card">
-      <div class="section-title"><i class="fa-solid fa-user-check"></i> Approvals</div>
-      <input placeholder='Purchase Manager/Supervisor'>
-      <input placeholder='Finance Manager'>
-      <input placeholder='Created By'>
-    </div>
-    <button class="submit-btn"><i class="fa-solid fa-paper-plane"></i> Submit Request</button>
-  </div>
-`;
 
-const formB = `
-  <div class="form-card">
-    <div class="section-title"><i class="fa-solid fa-user-tie"></i> Customer Account (Site Creation)</div>
-    <div class="form-grid">
-      <input placeholder='Customer Name'>
-      <input placeholder='Account Number'>
-      <input placeholder='Operating Unit'>
-      <input placeholder='Profile Collector'>
-      <input placeholder='Bill-To Site Location'>
-      <input placeholder='Country'>
-      <input placeholder='Address Line 1'>
-      <input placeholder='Address Line 2'>
-      <input placeholder='Address Line 3'>
-      <input placeholder='Address Line 4'>
-      <input placeholder='Sales Territory'>
-      <input placeholder='EDI Location'>
-      <input placeholder='Customer Sector'>
-      <input placeholder='Customer Sub Sector'>
-      <input placeholder='Pick Rule'>
-      <input placeholder='Customer Group'>
-      <input placeholder='Sales Rep Name'>
-      <input placeholder='Collector'>
-      <input placeholder='Payment Terms'>
-      <input placeholder='Currency'>
-      <input placeholder='Order Credit Limit'>
-      <input placeholder='Credit Limit'>
-      <input placeholder='Ship-To Site Location'>
-      <input placeholder='Bill-To Site Location'>
-      <input placeholder='Country'>
-      <input placeholder='Address Line 1'>
-      <input placeholder='Address Line 2'>
-      <input placeholder='Address Line 3'>
-      <input placeholder='Address Line 4'>
-      <input placeholder='Sales Territory'>
-      <input placeholder='EDI Location'>
-      <input placeholder='Customer Sector'>
-      <input placeholder='Customer Sub Sector'>
-      <input placeholder='Pick Rule'>
-      <input placeholder='Customer Group'>
-    </div>
-    <div class="approval-card">
-      <div class="section-title"><i class="fa-solid fa-user-check"></i> Approvals</div>
-      <input placeholder='Manager/Supervisor'>
-      <input placeholder='Finance Manager'>
-      <input placeholder='Created By'>
-    </div>
-    <button class="submit-btn"><i class="fa-solid fa-paper-plane"></i> Submit Request</button>
-  </div>
-`;
-
-const formC = `
-  <div class="form-card">
-    <div class="section-title"><i class="fa-solid fa-file"></i> Other Request</div>
-    <p>No custom fields for this form.</p>
-    <button class="submit-btn"><i class="fa-solid fa-paper-plane"></i> Submit Request</button>
-  </div>
-`;
-// ...existing code...
-    formSelect.addEventListener('change', () => {
-      const selected = formSelect.value;
-      if (selected === 'A') formArea.innerHTML = formA;
-      else if (selected === 'B') formArea.innerHTML = formB;
-      else formArea.innerHTML = formC;
-    });
   </script>
 </body>
 </html>

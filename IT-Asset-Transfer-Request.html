@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>IT Asset Transfer Request</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="p-4">
+    <div class="container">
+        <h2>IT Asset Transfer Request</h2>
+        <form>
+            <div class="mb-3">
+                <label>Requested by</label>
+                <input type="text" class="form-control">
+            </div>
+            <div class="row mb-3">
+                <div class="col">
+                    <label>From Location</label>
+                    <input type="text" class="form-control">
+                </div>
+                <div class="col">
+                    <label>To Location</label>
+                    <input type="text" class="form-control">
+                </div>
+            </div>
+            <div class="mb-3">
+                <label>Item(s) to be Transferred</label>
+                <textarea class="form-control" rows="3"></textarea>
+            </div>
+            <div class="mb-3">
+                <label>Reason for Transfer</label>
+                <textarea class="form-control" rows="3"></textarea>
+            </div>
+            <h5>Signatories</h5>
+            <div class="mb-3">
+                <label>Requester</label>
+                <input type="text" class="form-control">
+            </div>
+            <div class="mb-3">
+                <label>Date</label>
+                <input type="date" class="form-control">
+            </div>
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="consent">
+                <label class="form-check-label" for="consent">I consent BMMI Group to store and process my personal data</label>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
